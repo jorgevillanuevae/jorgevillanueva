@@ -1,0 +1,66 @@
+#include <stdlib.h>
+#include <stdio.h>
+typedef struct node_t* link;
+
+typedef struct node_t {
+  int key;
+
+  link p;
+  link left;
+  link right;
+} node;
+typedef struct {
+  node* root;
+} tree;
+node* create_node(int x){
+  node* n = (node*)malloc(sizeof(node));
+
+  n->key = x;
+  n->p = NULL;
+  n->left = NULL;
+  n->right = NULL;
+
+  return n;
+}
+void tree_insert(tree* T, int z){
+    node* parent = NULL;
+    node* x = T->root;
+
+    while(x){
+        parent = x;
+        if(z < x->key)
+            x = x->left;
+        else
+            x = x->right;
+    }
+
+    node* new_node = create_node(z);
+    new_node->p = parent;
+    if(parent == NULL) T->root = new_node;
+    else if(new_node->key < parent->key)
+        parent->left = new_node;
+    else
+        parent->right = new_node;
+} // fin tree_insert
+void inorden(const node* n,FILE *Salida){
+  if(n){
+    inorden(n->left,Salida);
+    fprintf(Salida,"%d\t", n->key);
+    inorden(n->right,Salida);
+  }
+}
+void preorden(const node* n,FILE *Salida){
+  if(n){
+    fprintf(Salida,"%d\t", n->key);
+    preorden(n->left,Salida);
+    preorden(n->right,Salida);
+  }
+}
+void postorden(const node* n,FILE *Salida){
+  if(n){
+    postorden(n->left,Salida);
+    postorden(n->right,Salida);
+    fprintf(Salida,"%d\t", n->key);
+
+  }
+}
